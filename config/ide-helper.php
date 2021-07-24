@@ -100,7 +100,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Helper files to include
+    | Helper files to includes
     |--------------------------------------------------------------------------
     |
     | Include helper files. By default not included, but can be toggled with the
@@ -116,7 +116,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Model locations to include
+    | Model locations to includes
     |--------------------------------------------------------------------------
     |
     | Define in which directories the ide-helper:models command should look

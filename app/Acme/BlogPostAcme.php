@@ -18,5 +18,8 @@ class BlogPostAcme extends \App\Acme\CoreAcme
 
         return $result;
     }
-
+    public function getEdit($id)
+    {
+        return $this->startConditions()->find($id);
+    }
 }

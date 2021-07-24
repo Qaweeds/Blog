@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Acme\BlogCategoryAcme;
 use App\Acme\BlogPostAcme;
 use Illuminate\Http\Request;
 
 class PostController extends AdminBaseController
 {
     private $blogPostAcme;
+    private $blogCategoryAcme;
 
     public function __construct()
     {
         parent::__construct();
         $this->blogPostAcme = app(BlogPostAcme::class);
+        $this->blogCategoryAcme = app(BlogCategoryAcme::class);
     }
 
     /**
@@ -67,7 +70,12 @@ class PostController extends AdminBaseController
      */
     public function edit($id)
     {
-        dd(__METHOD__);
+        $item = $this->blogPostAcme->getEdit($id);
+        if(empty($item)){
+            abort(404);
+        }
+        $category_list = $this->blogCategoryAcme->getForComboBox();
+        return view('blog.admin.posts.edit', compact('item', 'category_list'));
     }
 
     /**
