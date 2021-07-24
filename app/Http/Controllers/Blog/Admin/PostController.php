@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Acme\BlogCategoryAcme;
 use App\Acme\BlogPostAcme;
+use App\Http\Requests\BlogPostUpdateRequest;
 use Illuminate\Http\Request;
 
 class PostController extends AdminBaseController
@@ -43,7 +44,7 @@ class PostController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -54,7 +55,7 @@ class PostController extends AdminBaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -65,13 +66,13 @@ class PostController extends AdminBaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $item = $this->blogPostAcme->getEdit($id);
-        if(empty($item)){
+        if (empty($item)) {
             abort(404);
         }
         $category_list = $this->blogCategoryAcme->getForComboBox();
@@ -81,19 +82,42 @@ class PostController extends AdminBaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogPostUpdateRequest $request, $id)
     {
-        dd(__METHOD__);
+        $item = $this->blogPostAcme->getEdit($id);
+
+        if (is_null($item)) {
+            return back()->withErrors(['msg' => "Запись {$id} не найдена"])
+                ->withInput();
+        }
+        $data = $request->all();
+        if (is_null($data['slug'])) {
+            $data['slug'] = \Str::slug($data['title']);
+        }
+        if (is_null($item->published_at) and $data['is_published']) {
+            $data['published_at'] = now();
+        }
+
+        $result = $item->update($data);
+
+        if ($result) {
+            return redirect()->route('blog.admin.posts.edit', $item->id)
+                ->with('success', 'Успешно сохранено');
+        } else {
+            return back()->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
