@@ -95,12 +95,6 @@ class PostController extends AdminBaseController
                 ->withInput();
         }
         $data = $request->all();
-        if (is_null($data['slug'])) {
-            $data['slug'] = \Str::slug($data['title']);
-        }
-        if (is_null($item->published_at) and $data['is_published']) {
-            $data['published_at'] = now();
-        }
 
         $result = $item->update($data);
 
