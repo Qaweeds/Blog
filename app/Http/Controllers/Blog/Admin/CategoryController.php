@@ -18,6 +18,7 @@ class CategoryController extends AdminBaseController
 
         $this->blogCategoryAcme = app(BlogCategoryAcme::class);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -110,10 +111,6 @@ class CategoryController extends AdminBaseController
         }
 
         $data = $request->all();
-
-        if (is_null($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
-        }
 
         $result = $item->fill($data)->save();
 

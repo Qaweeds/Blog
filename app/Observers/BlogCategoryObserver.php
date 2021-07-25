@@ -9,29 +9,29 @@ class BlogCategoryObserver
     /**
      * Handle the BlogCategory "created" event.
      *
-     * @param  \App\Models\BlogCategory  $blogCategory
+     * @param \App\Models\BlogCategory $blogCategory
      * @return void
      */
-    public function created(BlogCategory $blogCategory)
+    public function creating(BlogCategory $blogCategory)
     {
-        //
+        $this->setSlug($blogCategory);
     }
 
     /**
      * Handle the BlogCategory "updated" event.
      *
-     * @param  \App\Models\BlogCategory  $blogCategory
+     * @param \App\Models\BlogCategory $blogCategory
      * @return void
      */
-    public function updated(BlogCategory $blogCategory)
+    public function updating(BlogCategory $blogCategory)
     {
-        //
+        $this->setSlug($blogCategory);
     }
 
     /**
      * Handle the BlogCategory "deleted" event.
      *
-     * @param  \App\Models\BlogCategory  $blogCategory
+     * @param \App\Models\BlogCategory $blogCategory
      * @return void
      */
     public function deleted(BlogCategory $blogCategory)
@@ -42,7 +42,7 @@ class BlogCategoryObserver
     /**
      * Handle the BlogCategory "restored" event.
      *
-     * @param  \App\Models\BlogCategory  $blogCategory
+     * @param \App\Models\BlogCategory $blogCategory
      * @return void
      */
     public function restored(BlogCategory $blogCategory)
@@ -53,11 +53,18 @@ class BlogCategoryObserver
     /**
      * Handle the BlogCategory "force deleted" event.
      *
-     * @param  \App\Models\BlogCategory  $blogCategory
+     * @param \App\Models\BlogCategory $blogCategory
      * @return void
      */
     public function forceDeleted(BlogCategory $blogCategory)
     {
         //
+    }
+
+    protected function setSlug(BlogCategory $blogCategory)
+    {
+        if (is_null($blogCategory->slug)) {
+            $blogCategory->slug = \Str::slug($blogCategory->title);
+        }
     }
 }
