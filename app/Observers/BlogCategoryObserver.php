@@ -14,7 +14,7 @@ class BlogCategoryObserver
      */
     public function creating(BlogCategory $blogCategory)
     {
-        $this->setSlug($blogCategory);
+
     }
 
     /**
@@ -25,7 +25,7 @@ class BlogCategoryObserver
      */
     public function updating(BlogCategory $blogCategory)
     {
-        $this->setSlug($blogCategory);
+
     }
 
     /**
@@ -59,12 +59,5 @@ class BlogCategoryObserver
     public function forceDeleted(BlogCategory $blogCategory)
     {
         //
-    }
-
-    protected function setSlug(BlogCategory $blogCategory)
-    {
-        if (is_null($blogCategory->slug)) {
-            $blogCategory->slug = \Str::slug($blogCategory->title);
-        }
     }
 }

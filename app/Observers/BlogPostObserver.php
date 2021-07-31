@@ -15,7 +15,10 @@ class BlogPostObserver
     public function creating(BlogPost $blogPost)
     {
         $this->setPublishedAt($blogPost);
-        $this->setSlug($blogPost);
+
+        $this->setHtml($blogPost);
+
+        $this->setUser($blogPost);
     }
 
     /**
@@ -27,7 +30,6 @@ class BlogPostObserver
     public function updating(BlogPost $blogPost)
     {
         $this->setPublishedAt($blogPost);
-        $this->setSlug($blogPost);
     }
 
     /**
@@ -72,8 +74,21 @@ class BlogPostObserver
 
     protected function setSlug(BlogPost $blogPost)
     {
-        if (is_null($blogPost->slug)) {
+        if (empty($blogPost->slug)) {
             $blogPost->slug = \Str::slug($blogPost->title);
         }
     }
+
+    protected function setHtml(BlogPost $blogPost)
+    {
+        if ($blogPost->isDirty('content_raw')) {
+            $blogPost->content_html = $blogPost->content_raw;
+        }
+    }
+
+    protected function setUser(BlogPost $blogPost)
+    {
+        $blogPost->user_id = auth()->id() ?? BlogPost::USER_ID;
+    }
+
 }

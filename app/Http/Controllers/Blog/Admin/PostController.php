@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Acme\BlogCategoryAcme;
 use App\Acme\BlogPostAcme;
+use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogPostUpdateRequest;
+use App\Models\BlogPost;
 use Illuminate\Http\Request;
 
 class PostController extends AdminBaseController
@@ -38,7 +40,10 @@ class PostController extends AdminBaseController
      */
     public function create()
     {
-        dd(__METHOD__);
+        $item = new BlogPost();
+        $category_list = $this->blogCategoryAcme->getForComboBox();
+
+        return view('blog.admin.posts.create', compact('item', 'category_list'));
     }
 
     /**
@@ -47,9 +52,16 @@ class PostController extends AdminBaseController
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogPostCreateRequest $request)
     {
-        dd(__METHOD__);
+        $data = $request->input();
+        $item = (new BlogPost())->create($data);
+
+        if ($item) {
+            return redirect()->route('blog.admin.posts.create')->with('success', 'Успешно создано');
+        } else {
+            return back()->withInput()->withErrors(['msg' => 'Ошибка создания']);
+        }
     }
 
     /**
